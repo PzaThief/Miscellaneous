@@ -45,58 +45,60 @@ def tester_7():
     return 0
 
 testerlist=[tester_1,tester_2,tester_3,tester_4,tester_5,tester_6,tester_7]
-for i in range(7):
-    if i==0:
-        print(list(map(float,printcap(i).split()))==[16668333,3334,4999.5])
-    elif i==1:
-        for j in range(1000):
-            sys.stdin = io.StringIO(str(j))
-            if j*100+20000!=int(printcap(i)):
-                print(False)
-                break
-        else:
-            print(True)
-    elif i==2:
-        print(printcap(i).replace("\n","")=="20022006201020142018202220262030203420382042204620502054205820622066207020742078")
-    elif i==3:
-        for j in range(-100,100):
-            sys.stdin = io.StringIO(str(j/10-5)+" "+str(j/10)+" "+str(j/10+1))
-            t1,t2=map(float,printcap(i).split())
-            if round(t1,5)!=round(j/10*3-4,5) or round(t2,5)!=round((j/10*3-4)/3,5):
-                print(False)
-                break
-        else:
-            print(True)
-    elif i==4:
-        for j in range(100):
-            a=random.randrange(1,1000)
-            b=random.randrange(1,1000)
-            sys.stdin = io.StringIO(str(a)+" "+str(b))
-            t1,t2=printcap(i).split()
-            if int(t1)!=min(a,b) or ("홀수"==t2)!=bool(min(a,b)%2):
-                print(False)
-                break
-        else:
-            print(True)
-    elif i==5:
-        for j in range(50):
-            n=j/10
-            sys.stdin = io.StringIO(str(n))
-            t=printcap(i).strip()
-            if not((n>=2 and chr(69-int(n))==t) or (n<2 and t=="F")):
-                print(False)
-                break
-        else:
-            print(True)
-    elif i==6:
-        for j in range(100):
-            a=random.randrange(1,1000)
-            b=random.randrange(1,1000)
-            sys.stdin = io.StringIO(str(a)+" "+str(b))
-            t=int(printcap(i))
-            print(a,b,t)
-            if t!=((abs(a-b)-1)//2+(1 if not(a%2 and b%2) else 0)):
-                print(False)
-                break
-        else:
-            print(True)
+try:
+    for i in range(7):
+        if i==0:
+            print(list(map(float,printcap(i).split()))==[16668333,3334,4999.5])
+        elif i==1:
+            for j in range(1000):
+                sys.stdin = io.StringIO(str(j))
+                if j*100+20000!=int(printcap(i)):
+                    print(False)
+                    break
+            else:
+                print(True)
+        elif i==2:
+            print(printcap(i).replace("\n","")=="20022006201020142018202220262030203420382042204620502054205820622066207020742078")
+        elif i==3:
+            for j in range(-100,100):
+                sys.stdin = io.StringIO(str(j/10-5)+" "+str(j/10)+" "+str(j/10+1))
+                t1,t2=map(float,printcap(i).split())
+                if round(t1,5)!=round(j/10*3-4,5) or round(t2,5)!=round((j/10*3-4)/3,5):
+                    print(False)
+                    break
+            else:
+                print(True)
+        elif i==4:
+            for j in range(100):
+                a=random.randrange(1,1000)
+                b=random.randrange(1,1000)
+                sys.stdin = io.StringIO(str(a)+" "+str(b))
+                t1,t2=printcap(i).split()
+                if int(t1)!=min(a,b) or ("홀수"==t2)!=bool(min(a,b)%2):
+                    print(False)
+                    break
+            else:
+                print(True)
+        elif i==5:
+            for j in range(50):
+                n=j/10
+                sys.stdin = io.StringIO(str(n))
+                t=printcap(i).strip()
+                if not((n>=2 and chr(69-int(n))==t) or (n<2 and t=="F")):
+                    print(False)
+                    break
+            else:
+                print(True)
+        elif i==6:
+            for j in range(100):
+                a=random.randrange(1,1000)
+                b=random.randrange(1,1000)
+                sys.stdin = io.StringIO(str(a)+" "+str(b))
+                t=int(printcap(i))
+                if t!=((abs(a-b)-1)//2+(1 if not(a%2 and b%2) else 0)):
+                    print(False)
+                    break
+            else:
+                print(True)
+except:
+    print("에러")
