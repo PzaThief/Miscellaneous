@@ -85,7 +85,8 @@ try:
                 n=j/10
                 sys.stdin = io.StringIO(str(n))
                 t=printcap(i).strip()
-                if not((n>=2 and chr(69-int(n))==t) or (n<2 and t=="F")):
+                print(n,t)
+                if not((n>=2 and chr(max(69-int(n),65))==t) or (n<2 and t=="F")):
                     print(False)
                     break
             else:

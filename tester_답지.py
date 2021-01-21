@@ -54,7 +54,7 @@ def tester_6():
     ###6. 학점이 4.0 이상이면 A, 3.0 이상이면 B, 2.0 이상이면 C, 그 이외이면 F를 부여하려 한다. 점수를 입력받은 후 어느 학점을 부여받게 되는지 출력하시오.
     Nun_gnyang_F_hackjumyeeya=float(input())
     if Nun_gnyang_F_hackjumyeeya>=2:
-        print(chr(69-int(Nun_gnyang_F_hackjumyeeya)))
+        print(chr(max(69-int(Nun_gnyang_F_hackjumyeeya),65)))
     else:
         print("F")
 
@@ -106,7 +106,8 @@ try:
                 n=j/10
                 sys.stdin = io.StringIO(str(n))
                 t=printcap(i).strip()
-                if not((n>=2 and chr(69-int(n))==t) or (n<2 and t=="F")):
+                print(n,t)
+                if not((n>=2 and chr(max(69-int(n),65))==t) or (n<2 and t=="F")):
                     print(False)
                     break
             else:
