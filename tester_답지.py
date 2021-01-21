@@ -1,4 +1,5 @@
 import io
+import os
 import sys
 import random
 from contextlib import redirect_stdout
@@ -123,3 +124,5 @@ try:
                 print(True)
 except:
     print("에러")
+finally:
+    os.system("pause")
