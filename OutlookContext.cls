@@ -23,8 +23,11 @@ Attribute VB_Exposed = False
 '               be left accompanied by these comments.
 '-----------------------------------------------------------------
 ' Edited by Minha, Jeong / 2021.02.07
-' Make AddBlanks more faster
-' add mail key 'Senton' and larger STR_COMPARE_LIMIT to 70 (mail subject length usually over 40)
+' Make AddBlanks faster
+' Using .SenderEmailAddress instead of .SenderName
+' Add mail keys '.Senton', '.Recipients', 'attachments' and increase STR_COMPARE_LIMIT to 100
+' There is no reason for cutting short string, vba can handle it over 2bil length
+' Make key array for checking more than double duplicated
 '-----------------------------------------------------------------
 Option Explicit
 Const DATETIME_FORMAT = "yyyy.mm.dd hh:mm:ss"
@@ -124,33 +127,57 @@ Public Function SetStartFolder() As Boolean
   End Select
   SetStartFolder = Not IsNull(folder)
 End Function
-
-'add blanks at the ending of a string
-Private Function AddBlanks(ByVal S As String, ByVal L As Integer) As String
-  Dim i As Integer, Diff As Integer
-  S = LTrim(S)
-  Diff = L - Len(S)
-  If Diff > 0 Then
-    For i = 1 To Diff
-      S = S + " "
+Function Repeat$(ByVal n&, s$)
+    Dim r&
+    r = Len(s)
+    If n < 1 Then Exit Function
+    If r = 0 Then Exit Function
+    If r = 1 Then Repeat = String$(n, s): Exit Function
+    Repeat = Space$(n * r)
+    Mid$(Repeat, 1) = s: If n > 1 Then Mid$(Repeat, r + 1) = Repeat
+End Function
+Function Callitem(ByRef item) As String
+    Dim s As String
+    Dim i As Integer
+    s = ""
+    If item.Count() > 0 Then
+    For i = 1 To item.Count()
+    If item.Class = olAttachments Then
+    s = s + item.item(i).FileName + " "
+    Else
+    s = s + item.item(i).Name + " "
+    End If
     Next
+    End If
+    Callitem = s
+End Function
+'add blanks at the ending of a string
+Private Function AddBlanks(ByVal s As String, ByVal L As Integer) As String
+  Dim i As Integer, Diff As Integer
+  s = LTrim(s)
+  Diff = L - Len(s)
+  If Diff > 0 Then
+      s = s + Repeat(Diff, " ")
   ElseIf Diff < 0 Then
-    S = Left(S, L)
+    s = Left(s, L)
   End If
-  AddBlanks = S
+  AddBlanks = s
 End Function
 
 'get a current string key
 Public Function GetCurrKey(ByVal item As Object) As String
-  Const STR_COMPARE_LIMIT = 40 'check only first N characters for strings
+  Const STR_COMPARE_LIMIT = 100 'check only first N characters for strings
   Dim strNewKey As String
   
   With item
     Select Case op
       Case 1
-        strNewKey = AddBlanks(.SenderName, STR_COMPARE_LIMIT) _
+        strNewKey = AddBlanks(.SenderEmailAddress, STR_COMPARE_LIMIT) _
+                  & AddBlanks(Callitem(.Recipients), STR_COMPARE_LIMIT) _
                   & AddBlanks(.Subject, STR_COMPARE_LIMIT) _
-                  & Format(.ReceivedTime, DATETIME_FORMAT)
+                  & AddBlanks(Callitem(.Attachments), STR_COMPARE_LIMIT) _
+                  & Format(.ReceivedTime, DATETIME_FORMAT) _
+                  & Format(.SentOn, DATETIME_FORMAT)
       Case 2
         strNewKey = AddBlanks(.Subject, STR_COMPARE_LIMIT) & " " _
                   & Format(.Start, DATETIME_FORMAT) & " " _
@@ -170,6 +197,7 @@ Public Function GetCurrKey(ByVal item As Object) As String
                   & .Email1Address & " " _
                   & .BusinessTelephoneNumber
     End Select
+    Debug.Print (strNewKey)
   End With
   GetCurrKey = strNewKey
 End Function

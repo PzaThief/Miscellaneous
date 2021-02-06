@@ -27,6 +27,8 @@ Attribute VB_Name = "OutlookMacro"
 ' Licence     : You can copy this code freely, but it should
 '               be left accompanied by these comments.
 '-------------------------------------------------------------------------
+' Edited by Minha, Jeong / 2021.02.07
+'-----------------------------------------------------------------
 Option Explicit
 
 Dim lCount As Long 'to count the deleted items
@@ -78,14 +80,12 @@ End Sub
 
 'the process folder : each folder item is compared to the previous to delete duplicated entries
 Private Sub ProcessFolder(olCtx As OutlookContext)
-  Dim i As Long
-  Dim strLastKey As String, strNewKey As String
+  Dim i, j As Long
+  Dim strLastKey(4) As String
+  Dim strNewKey As String
   Dim olNewFolder As Outlook.MAPIFolder
   Dim olTempItem As Object     'could be various item types
   Dim myItems As Outlook.Items 'a local copy of the collection
-  
-  'initialize last key string
-  strLastKey = ""
    
   'copy the collection (it's obligatory for the sort) and sort them
   Set myItems = olCtx.GetFolder().Items
@@ -111,17 +111,17 @@ Private Sub ProcessFolder(olCtx As OutlookContext)
         ProgressBox.Increment (myItems.Count - i + 1) / myItems.Count * 100
         
         'check to see if a match is found
-        If strNewKey = strLastKey Then
-          
-          'comment the next line if you want just debug, not delete for this moment
-          olTempItem.Delete
-          
-          'count deleted items
-          lCount = lCount + 1
-        End If
-
+        For j = LBound(strLastKey) To UBound(strLastKey)
+            If strNewKey = strLastKey(j) Then
+            olTempItem.Delete
+            'count deleted items
+            lCount = lCount + 1
+            Exit For
+            End If
+        Next
+        
         'memorize last key found
-        strLastKey = strNewKey
+        strLastKey(lCount Mod 5) = strNewKey
       End With
     End If
   Next
