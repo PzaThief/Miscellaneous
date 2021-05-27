@@ -39,7 +39,6 @@ def main():
             response = requests.get(first_post_node["display_url"])
             img = Image.open(BytesIO(response.content))
             img.save(str(first_post_node["taken_at_timestamp"]) + ".png")
-            notify_todays_menu(str(first_post_node["taken_at_timestamp"]))
         time.sleep(10)
 
 
